@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- =====================================================
+         SVG Ornament Sprite Library (mengikuti undangan kertas)
+         Gradien & symbol di-reuse via <use href="#id"/> di seluruh halaman.
+         ===================================================== -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <!-- Watercolor blob gradients -->
+            <radialGradient id="grad-pink" cx="50%" cy="50%" r="55%">
+                <stop offset="0%"   stop-color="#E8B4BC" stop-opacity="0.85"/>
+                <stop offset="40%"  stop-color="#E8B4BC" stop-opacity="0.55"/>
+                <stop offset="75%"  stop-color="#F8E1E7" stop-opacity="0.30"/>
+                <stop offset="100%" stop-color="#F8E1E7" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="grad-rose" cx="40%" cy="40%" r="60%">
+                <stop offset="0%"   stop-color="#D89AA3" stop-opacity="0.75"/>
+                <stop offset="55%"  stop-color="#E8B4BC" stop-opacity="0.40"/>
+                <stop offset="100%" stop-color="#F8E1E7" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="grad-cream" cx="50%" cy="50%" r="60%">
+                <stop offset="0%"   stop-color="#FAF3F0" stop-opacity="0.95"/>
+                <stop offset="100%" stop-color="#FAF3F0" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="soft-blur" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="2"/>
+            </filter>
+
+            <symbol id="blob-pink" viewBox="0 0 200 200">
+                <g filter="url(#soft-blur)">
+                    <path fill="url(#grad-pink)"
+                          d="M100,12 C146,14 184,52 188,100 C192,148 152,188 104,188 C56,188 14,146 12,100 C10,52 54,10 100,12 Z"/>
+                    <path fill="url(#grad-rose)" opacity=".7"
+                          d="M70,40 C120,30 170,70 165,120 C160,165 100,180 60,150 C25,125 30,65 70,40 Z"/>
+                </g>
+            </symbol>
+
+            <symbol id="blob-rose" viewBox="0 0 200 200">
+                <g filter="url(#soft-blur)">
+                    <path fill="url(#grad-rose)"
+                          d="M100,18 C150,20 180,55 182,100 C184,145 145,180 100,182 C55,184 20,145 18,100 C16,55 50,16 100,18 Z"/>
+                </g>
+            </symbol>
+
+            <!-- Peony flower -->
+            <radialGradient id="peony-petal" cx="50%" cy="40%" r="60%">
+                <stop offset="0%"   stop-color="#FBEEF1"/>
+                <stop offset="55%"  stop-color="#E8B4BC"/>
+                <stop offset="100%" stop-color="#C97B84"/>
+            </radialGradient>
+            <radialGradient id="peony-center" cx="50%" cy="50%" r="50%">
+                <stop offset="0%"   stop-color="#E0C896"/>
+                <stop offset="100%" stop-color="#A75A66"/>
+            </radialGradient>
+
+            <symbol id="peony" viewBox="0 0 100 100">
+                <g fill="url(#peony-petal)" stroke="#A75A66" stroke-width=".4" opacity=".95">
+                    <ellipse cx="50" cy="18" rx="14" ry="20"/>
+                    <ellipse cx="50" cy="82" rx="14" ry="20"/>
+                    <ellipse cx="18" cy="50" rx="20" ry="14"/>
+                    <ellipse cx="82" cy="50" rx="20" ry="14"/>
+                    <ellipse cx="27" cy="27" rx="14" ry="20" transform="rotate(-45 27 27)"/>
+                    <ellipse cx="73" cy="27" rx="14" ry="20" transform="rotate(45 73 27)"/>
+                    <ellipse cx="27" cy="73" rx="14" ry="20" transform="rotate(45 27 73)"/>
+                    <ellipse cx="73" cy="73" rx="14" ry="20" transform="rotate(-45 73 73)"/>
+                </g>
+                <g fill="#E8B4BC" stroke="#A75A66" stroke-width=".4">
+                    <ellipse cx="50" cy="32" rx="9" ry="13"/>
+                    <ellipse cx="50" cy="68" rx="9" ry="13"/>
+                    <ellipse cx="32" cy="50" rx="13" ry="9"/>
+                    <ellipse cx="68" cy="50" rx="13" ry="9"/>
+                </g>
+                <circle cx="50" cy="50" r="9" fill="url(#peony-center)" stroke="#A75A66" stroke-width=".4"/>
+                <g fill="#FAF3F0" opacity=".9">
+                    <circle cx="48" cy="48" r="1.4"/>
+                    <circle cx="52" cy="49" r="1.4"/>
+                    <circle cx="50" cy="52" r="1.4"/>
+                </g>
+            </symbol>
+
+            <!-- Rosebud -->
+            <symbol id="bud" viewBox="0 0 60 60">
+                <g fill="#E8B4BC" stroke="#A75A66" stroke-width=".5">
+                    <ellipse cx="30" cy="32" rx="10" ry="14"/>
+                    <path d="M30,18 C24,22 24,32 30,36 C36,32 36,22 30,18 Z" fill="#D89AA3"/>
+                    <path d="M30,20 C26,24 26,32 30,34 C34,32 34,24 30,20 Z" fill="#C97B84"/>
+                </g>
+                <g fill="#8B9A7A">
+                    <path d="M22,42 C20,46 24,52 30,48 Z"/>
+                    <path d="M38,42 C40,46 36,52 30,48 Z"/>
+                </g>
+            </symbol>
+
+            <!-- Eucalyptus branch -->
+            <symbol id="eucalyptus" viewBox="0 0 200 60">
+                <path d="M5,30 C40,28 90,32 130,30 C160,29 180,30 195,30"
+                      fill="none" stroke="#8B9A7A" stroke-width="1.2" stroke-linecap="round"/>
+                <g fill="#B8C4A8" stroke="#8B9A7A" stroke-width=".4">
+                    <ellipse cx="20"  cy="20" rx="8"  ry="4" transform="rotate(-25 20 20)"/>
+                    <ellipse cx="35"  cy="42" rx="9"  ry="4" transform="rotate(25 35 42)"/>
+                    <ellipse cx="55"  cy="18" rx="10" ry="4.5" transform="rotate(-22 55 18)"/>
+                    <ellipse cx="75"  cy="44" rx="10" ry="4.5" transform="rotate(22 75 44)"/>
+                    <ellipse cx="98"  cy="17" rx="11" ry="5" transform="rotate(-20 98 17)"/>
+                    <ellipse cx="120" cy="45" rx="11" ry="5" transform="rotate(20 120 45)"/>
+                    <ellipse cx="143" cy="18" rx="10" ry="4.5" transform="rotate(-22 143 18)"/>
+                    <ellipse cx="163" cy="42" rx="9"  ry="4" transform="rotate(25 163 42)"/>
+                    <ellipse cx="180" cy="22" rx="7"  ry="3.5" transform="rotate(-30 180 22)"/>
+                </g>
+                <g fill="#8B9A7A" opacity=".5">
+                    <ellipse cx="98"  cy="17" rx="6" ry="2" transform="rotate(-20 98 17)"/>
+                    <ellipse cx="120" cy="45" rx="6" ry="2" transform="rotate(20 120 45)"/>
+                </g>
+            </symbol>
+
+            <!-- Corner spray -->
+            <symbol id="corner-spray" viewBox="0 0 160 160">
+                <g opacity=".55">
+                    <circle cx="40" cy="40" r="50" fill="url(#grad-pink)" filter="url(#soft-blur)"/>
+                </g>
+                <g fill="#B8C4A8" stroke="#8B9A7A" stroke-width=".5">
+                    <ellipse cx="120" cy="20" rx="9" ry="4" transform="rotate(40 120 20)"/>
+                    <ellipse cx="135" cy="40" rx="10" ry="4.5" transform="rotate(50 135 40)"/>
+                    <ellipse cx="20" cy="120" rx="9" ry="4" transform="rotate(-50 20 120)"/>
+                    <ellipse cx="40" cy="135" rx="10" ry="4.5" transform="rotate(-40 40 135)"/>
+                    <ellipse cx="100" cy="50" rx="8" ry="3.5" transform="rotate(60 100 50)"/>
+                    <ellipse cx="50" cy="100" rx="8" ry="3.5" transform="rotate(-30 50 100)"/>
+                </g>
+                <g transform="translate(20,20) scale(0.8)"><use href="#peony"/></g>
+                <g transform="translate(75,75) scale(0.5)"><use href="#peony"/></g>
+                <g transform="translate(85,20) scale(0.5) rotate(20)"><use href="#bud"/></g>
+                <g transform="translate(15,85) scale(0.5) rotate(-30)"><use href="#bud"/></g>
+                <g fill="#8B9A7A" opacity=".7">
+                    <path d="M30,90 C40,95 50,100 60,110 C50,108 40,102 30,90 Z"/>
+                    <path d="M90,30 C95,40 100,50 110,60 C108,50 102,40 90,30 Z"/>
+                </g>
+            </symbol>
+
+            <!-- Top header garland -->
+            <symbol id="garland" viewBox="0 0 240 80">
+                <g transform="translate(0,20) scale(0.6)"><use href="#eucalyptus"/></g>
+                <g transform="translate(240,60) scale(-0.6, 0.6)"><use href="#eucalyptus"/></g>
+                <g transform="translate(95,15)"><use href="#peony" width="50" height="50"/></g>
+                <g transform="translate(75,25) scale(0.6)"><use href="#bud"/></g>
+                <g transform="translate(155,30) scale(0.55) rotate(15)"><use href="#bud"/></g>
+                <g fill="#C9A66B">
+                    <circle cx="60"  cy="50" r="1.2"/>
+                    <circle cx="180" cy="48" r="1.2"/>
+                    <circle cx="120" cy="68" r="1.5"/>
+                </g>
+            </symbol>
+
+            <!-- Heart clip-path untuk foto cover -->
+            <clipPath id="heart-clip" clipPathUnits="objectBoundingBox">
+                <path d="M0.5,1 C0.2,0.773 0,0.545 0,0.284 C0,0.125 0.12,0 0.25,0 C0.36,0 0.45,0.08 0.5,0.182 C0.55,0.08 0.64,0 0.75,0 C0.88,0 1,0.125 1,0.284 C1,0.545 0.8,0.773 0.5,1 Z"/>
+            </clipPath>
+
+            <!-- Divider flourish -->
+            <symbol id="divider-flourish" viewBox="0 0 200 30">
+                <line x1="10" y1="15" x2="80" y2="15" stroke="#C9A66B" stroke-width=".8"/>
+                <line x1="120" y1="15" x2="190" y2="15" stroke="#C9A66B" stroke-width=".8"/>
+                <g transform="translate(100,15)">
+                    <circle r="3" fill="#C97B84" stroke="#A75A66" stroke-width=".4"/>
+                    <circle r="1.2" fill="#FAF3F0"/>
+                </g>
+                <g fill="#B8C4A8" stroke="#8B9A7A" stroke-width=".3">
+                    <ellipse cx="88" cy="15" rx="3.5" ry="1.5" transform="rotate(-20 88 15)"/>
+                    <ellipse cx="112" cy="15" rx="3.5" ry="1.5" transform="rotate(20 112 15)"/>
+                </g>
+            </symbol>
+        </defs>
+    </svg>
+
+    <!-- Audio Player -->
+    <audio id="bgMusic" loop>
+        <source id="musicSource" src="" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating Music Button -->
+    <button class="music-toggle" id="musicToggle">
+        <i class="fas fa-music"></i>
+    </button>
+
+    <!-- Cover/Opening Modal -->
+    <div class="cover-modal" id="coverModal">
+        <div class="cover-overlay"></div>
+        <div class="ornament ornament-corner ornament-tl"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+        <div class="ornament ornament-corner ornament-tr"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+        <div class="ornament ornament-corner ornament-bl"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+        <div class="ornament ornament-corner ornament-br"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+        <div class="cover-content">
+            <div class="cover-inner" data-aos="fade-up">
+                <span class="ornament-garland"><svg viewBox="0 0 240 80"><use href="#garland"/></svg></span>
+                <!-- Foto cover disembunyikan sementara -->
+                <!-- <div class="cover-photo">
+                    <img id="coverPhoto" src="" alt="Syaiful & Sarah">
+                </div> -->
+                <p class="cover-label">The Wedding Of</p>
+                <h1 class="cover-names" id="coverNames"></h1>
+                <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+                <div class="cover-date">
+                    <p id="coverDate"></p>
+                </div>
+                <div class="cover-guest">
+                    <p>Kepada Yth.</p>
+                    <h3 id="guestName">Nama Tamu</h3>
+                </div>
+                <button class="btn-open" id="openInvitation">
+                    <i class="fas fa-envelope-open"></i>
+                    Buka Undangan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+
+        <!-- Hero Section -->
+        <section class="hero-section" id="home">
+            <div class="hero-overlay"></div>
+            <div class="ornament ornament-corner ornament-tl"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+            <div class="ornament ornament-corner ornament-tr"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+            <div class="ornament ornament-corner ornament-bl"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+            <div class="ornament ornament-corner ornament-br"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+            <div class="hero-content" data-aos="fade-up">
+                <span class="ornament-garland"><svg viewBox="0 0 240 80"><use href="#garland"/></svg></span>
+                <p class="hero-subtitle">We Are Getting Married</p>
+                <h1 class="hero-title" id="heroNames"></h1>
+                <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+                <p class="hero-date" id="heroDate"></p>
+            </div>
+            <div class="scroll-down">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- Greeting Section -->
+        <section class="greeting-section section-padding">
+            <div class="container">
+                <div class="greeting-content" data-aos="fade-up">
+                    <p class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</p>
+                    <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+                    <p class="salam" id="salamPembuka"></p>
+                    <p class="greeting-text">
+                        Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i
+                        serta kerabat sekalian untuk menghadiri acara pernikahan kami:
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Couple Section -->
+        <section class="couple-section section-padding" id="couple">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="ornament-garland"><svg viewBox="0 0 240 80"><use href="#garland"/></svg></span>
+                    <h2 class="section-title">Mempelai</h2>
+                    <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+                </div>
+
+                <div class="couple-wrapper">
+                    <!-- Groom -->
+                    <div class="couple-card" data-aos="fade-right">
+                        <div class="couple-photo">
+                            <img id="groomPhoto" src="" alt="Mempelai Pria">
+                        </div>
+                        <h3 class="couple-name" id="groomName"></h3>
+                        <p class="couple-parents" id="groomParents"></p>
+                        <div class="couple-social" id="groomSocial"></div>
+                    </div>
+
+                    <!-- Ampersand -->
+                    <div class="couple-ampersand" data-aos="zoom-in">
+                        <span>&</span>
+                    </div>
+
+                    <!-- Bride -->
+                    <div class="couple-card" data-aos="fade-left">
+                        <div class="couple-photo">
+                            <img id="bridePhoto" src="" alt="Mempelai Wanita">
+                        </div>
+                        <h3 class="couple-name" id="brideName"></h3>
+                        <p class="couple-parents" id="brideParents"></p>
+                        <div class="couple-social" id="brideSocial"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quote Section -->
+        <section class="quote-section">
+            <div class="quote-overlay"></div>
+            <div class="container">
+                <div class="quote-content" data-aos="fade-up">
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <p class="quote-text" id="quoteText"></p>
+                    <p class="quote-source" id="quoteSource"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Journey Section -->
+        <section class="journey-section section-padding" id="journey">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="ornament-garland"><svg viewBox="0 0 240 80"><use href="#garland"/></svg></span>
+                    <h2 class="section-title">Our Journey</h2>
+                    <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+                    <p class="section-subtitle">Jejak langkah dua hati yang menemukan rumahnya</p>
+                </div>
+
+                <div class="journey-timeline" id="journeyTimeline">
+                    <!-- Journey items will be loaded from config -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Event Section -->
+        <section class="event-section section-padding" id="event">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="ornament-garland"><svg viewBox="0 0 240 80"><use href="#garland"/></svg></span>
+                    <h2 class="section-title">Waktu & Tempat</h2>
+                    <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+                </div>
+
+                <!-- Countdown -->
+                <div class="countdown-wrapper" data-aos="fade-up">
+                    <h3 class="countdown-title">Menghitung Hari</h3>
+                    <div class="countdown" id="countdown">
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="days">00</span>
+                            <span class="countdown-label">Hari</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="hours">00</span>
+                            <span class="countdown-label">Jam</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="minutes">00</span>
+                            <span class="countdown-label">Menit</span>
+                        </div>
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="seconds">00</span>
+                            <span class="countdown-label">Detik</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="events-wrapper">
+                    <!-- Akad Nikah -->
+                    <div class="event-card" data-aos="fade-right">
+                        <div class="event-icon">
+                            <i class="fas fa-mosque"></i>
+                        </div>
+                        <h3 class="event-title">Akad Nikah</h3>
+                        <div class="event-details">
+                            <p><i class="far fa-calendar"></i> <span id="akadDate"></span></p>
+                            <p><i class="far fa-clock"></i> <span id="akadTime"></span></p>
+                            <p><i class="fas fa-map-marker-alt"></i> <span id="akadVenue"></span></p>
+                            <p class="event-address" id="akadAddress"></p>
+                        </div>
+                        <a id="akadMaps" href="#" target="_blank" class="btn-maps">
+                            <i class="fas fa-map-marked-alt"></i> Lihat Lokasi
+                        </a>
+                    </div>
+
+                    <!-- Resepsi -->
+                    <div class="event-card" data-aos="fade-left">
+                        <div class="event-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3 class="event-title">Resepsi</h3>
+                        <div class="event-details">
+                            <p><i class="far fa-calendar"></i> <span id="resepsiDate"></span></p>
+                            <p><i class="far fa-clock"></i> <span id="resepsiTime"></span></p>
+                            <p><i class="fas fa-map-marker-alt"></i> <span id="resepsiVenue"></span></p>
+                            <p class="event-address" id="resepsiAddress"></p>
+                        </div>
+                        <a id="resepsiMaps" href="#" target="_blank" class="btn-maps">
+                            <i class="fas fa-map-marked-alt"></i> Lihat Lokasi
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section section-padding" id="gallery">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="ornament-garland"><svg viewBox="0 0 240 80"><use href="#garland"/></svg></span>
+                    <h2 class="section-title">Galeri Foto</h2>
+                    <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+                    <p class="section-subtitle">Momen-momen indah kami</p>
+                </div>
+
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Gallery items will be loaded from config -->
+                </div>
+
+                <div class="gallery-more" data-aos="fade-up">
+                    <button class="btn-show-more" id="galleryShowMore">
+                        <span>Lihat Selengkapnya</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- RSVP Section -->
+        <section class="rsvp-section section-padding" id="rsvp">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="ornament-garland"><svg viewBox="0 0 240 80"><use href="#garland"/></svg></span>
+                    <h2 class="section-title">Konfirmasi Kehadiran</h2>
+                    <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+                    <p class="section-subtitle">Mohon konfirmasi kehadiran Anda</p>
+                </div>
+
+                <div class="rsvp-wrapper">
+                    <form class="rsvp-form" id="rsvpForm" data-aos="fade-up">
+                        <div class="form-group">
+                            <label for="name">Nama Lengkap</label>
+                            <input type="text" id="name" name="name" placeholder="Masukkan nama Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="attendance">Konfirmasi Kehadiran</label>
+                            <select id="attendance" name="attendance" required>
+                                <option value="">-- Pilih --</option>
+                                <option value="hadir">Hadir</option>
+                                <option value="tidak_hadir">Tidak Hadir</option>
+                                <option value="ragu">Masih Ragu</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="guests">Jumlah Tamu</label>
+                            <select id="guests" name="guests">
+                                <option value="1">1 Orang</option>
+                                <option value="2">2 Orang</option>
+                                <option value="3">3 Orang</option>
+                                <option value="4">4 Orang</option>
+                                <option value="5">5 Orang</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Ucapan & Doa</label>
+                            <textarea id="message" name="message" rows="4" placeholder="Tulis ucapan dan doa untuk kedua mempelai..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i> Kirim Ucapan
+                        </button>
+                    </form>
+
+                    <!-- Attendance Stats -->
+                    <div class="attendance-stats" data-aos="fade-up">
+                        <div class="stat-item hadir">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Hadir</span>
+                        </div>
+                        <div class="stat-item tidak">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Tidak Hadir</span>
+                        </div>
+                        <div class="stat-item ragu">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Ragu-ragu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wishes List -->
+                <div class="wishes-list" data-aos="fade-up">
+                    <h3 class="wishes-title">Ucapan & Doa</h3>
+                    <div class="wishes-container" id="wishesContainer">
+                        <!-- Wishes will be loaded here -->
+                    </div>
+                    <div class="wishes-footer">
+                        <p class="wishes-empty" id="wishesEmpty" hidden>Belum ada ucapan. Jadilah yang pertama!</p>
+                        <button type="button" class="btn-load-more" id="btnLoadMore" hidden>
+                            <i class="fas fa-chevron-down"></i>
+                            <span class="btn-load-more-label">Muat Lebih Banyak</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gift Section -->
+        <section class="gift-section section-padding" id="gift">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="ornament-garland"><svg viewBox="0 0 240 80"><use href="#garland"/></svg></span>
+                    <h2 class="section-title">Amplop Digital</h2>
+                    <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+                    <p class="section-subtitle">Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika Anda ingin memberikan tanda kasih, kami menyediakan amplop digital.</p>
+                </div>
+
+                <div class="gift-wrapper">
+                    <!-- Bank Transfer -->
+                    <div class="gift-card" data-aos="fade-right">
+                        <div class="gift-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3 class="gift-title" id="bankName"></h3>
+                        <p class="gift-name" id="bankAccountName"></p>
+                        <div class="gift-number">
+                            <span id="bankNumber"></span>
+                            <button class="btn-copy" id="btnCopyBank">
+                                <i class="far fa-copy"></i> Salin
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- E-Wallet -->
+                    <div class="gift-card" data-aos="fade-left">
+                        <div class="gift-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <h3 class="gift-title" id="ewalletName"></h3>
+                        <p class="gift-name" id="ewalletAccountName"></p>
+                        <div class="gift-number">
+                            <span id="ewalletNumber"></span>
+                            <button class="btn-copy" id="btnCopyEwallet">
+                                <i class="far fa-copy"></i> Salin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gift Address -->
+                <div class="gift-address" data-aos="fade-up">
+                    <h3><i class="fas fa-gift"></i> Kirim Hadiah</h3>
+                    <p id="giftAddress"></p>
+                    <div class="gift-address-actions">
+                        <button class="btn-copy" id="btnCopyAddress">
+                            <i class="far fa-copy"></i> Salin Alamat
+                        </button>
+                        <a id="giftAddressMaps" href="#" target="_blank" class="btn-copy btn-maps-mini">
+                            <i class="fas fa-map-marked-alt"></i> Buka Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Closing Section -->
+        <section class="closing-section">
+            <div class="closing-overlay"></div>
+            <div class="ornament ornament-corner ornament-tl"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+            <div class="ornament ornament-corner ornament-tr"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+            <div class="ornament ornament-corner ornament-bl"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+            <div class="ornament ornament-corner ornament-br"><svg viewBox="0 0 160 160"><use href="#corner-spray"/></svg></div>
+            <div class="container">
+                <div class="closing-content" data-aos="fade-up">
+                    <span class="ornament-garland"><svg viewBox="0 0 240 80"><use href="#garland"/></svg></span>
+                    <p class="closing-thanks">Terima Kasih</p>
+                    <h2 class="closing-names" id="closingNames"></h2>
+                    <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+                    <p class="closing-text">
+                        Merupakan suatu kehormatan dan kebahagiaan bagi kami,
+                        apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.
+                    </p>
+                    <p class="closing-salam" id="salamPenutup"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span class="ornament-divider"><svg viewBox="0 0 200 30"><use href="#divider-flourish"/></svg></span>
+            <p>Made with <i class="fas fa-heart"></i> for <span id="footerNames"></span></p>
+            <p class="footer-copyright" id="footerYear"></p>
+        </footer>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottomNav">
+        <a href="#home" class="nav-item active" data-section="home">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#couple" class="nav-item" data-section="couple">
+            <i class="fas fa-heart"></i>
+            <span>Mempelai</span>
+        </a>
+        <a href="#event" class="nav-item" data-section="event">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Acara</span>
+        </a>
+        <a href="#gallery" class="nav-item" data-section="gallery">
+            <i class="fas fa-images"></i>
+            <span>Galeri</span>
+        </a>
+        <a href="#rsvp" class="nav-item" data-section="rsvp">
+            <i class="fas fa-envelope"></i>
+            <span>RSVP</span>
+        </a>
+    </nav>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" aria-label="Tutup">&times;</button>
+        <div class="lightbox-progress"><span id="lightboxIndex">1</span> / <span id="lightboxTotal">48</span></div>
+        <button class="lightbox-play" id="lightboxPlay" aria-label="Putar otomatis"><i class="fas fa-play"></i></button>
+        <div class="lightbox-stage">
+            <img src="" alt="Gallery Image" class="lightbox-image">
+        </div>
+        <button class="lightbox-prev" aria-label="Foto sebelumnya"><i class="fas fa-chevron-left"></i></button>
+        <button class="lightbox-next" aria-label="Foto berikutnya"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Config -->
+    <script src="config.js"></script>
+
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Firebase -->
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, onSnapshot, serverTimestamp, limit, startAfter, where, getCountFromServer } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDiC7hB-MBYx_LgEWD0HQ3mwxrkjiI2P8E",
+            authDomain: "undangan-7ba18.firebaseapp.com",
+            projectId: "undangan-7ba18",
+            storageBucket: "undangan-7ba18.firebasestorage.app",
+            messagingSenderId: "458590600416",
+            appId: "1:458590600416:web:a9f4faf2d8dc77f95ae485",
+            measurementId: "G-KEXFKHTG0D"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make Firebase functions available globally
+        window.firebaseDB = db;
+        window.firebaseAddDoc = addDoc;
+        window.firebaseCollection = collection;
+        window.firebaseGetDocs = getDocs;
+        window.firebaseQuery = query;
+        window.firebaseOrderBy = orderBy;
+        window.firebaseOnSnapshot = onSnapshot;
+        window.firebaseServerTimestamp = serverTimestamp;
+        window.firebaseLimit = limit;
+        window.firebaseStartAfter = startAfter;
+        window.firebaseWhere = where;
+        window.firebaseGetCountFromServer = getCountFromServer;
+        window.firebaseReady = true;
+
+        // Dispatch event when Firebase is ready
+        window.dispatchEvent(new Event('firebaseReady'));
+    </script>
+
+    <!-- Custom JS -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>

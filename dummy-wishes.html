@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Ucapan Dummy - Undangan</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 720px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fafafa;
+            color: #333;
+        }
+        h1 { color: #d97a89; margin-bottom: 8px; }
+        .warn {
+            background: #fff3cd;
+            border-left: 4px solid #f39c12;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+        button {
+            background: #d97a89;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        button:hover:not(:disabled) { opacity: 0.9; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        button.danger { background: #dc3545; }
+        #status {
+            margin: 20px 0;
+            padding: 12px 16px;
+            border-radius: 6px;
+            display: none;
+        }
+        #status.ok    { display: block; background: #d4edda; color: #155724; }
+        #status.err   { display: block; background: #f8d7da; color: #721c24; }
+        #status.info  { display: block; background: #d1ecf1; color: #0c5460; }
+        #log {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+        #log:empty { display: none; }
+        #log li {
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.85rem;
+            font-family: ui-monospace, "SF Mono", Consolas, monospace;
+        }
+        #log li:last-child { border-bottom: none; }
+        #log li.err { background: #fdf0f0; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Generator Ucapan Dummy</h1>
+    <p>Menambahkan 15 ucapan palsu ke Firestore collection <code>wishes</code> untuk testing pagination.</p>
+
+    <div class="warn">
+        <strong>Catatan:</strong> Setiap dokumen dummy ditandai dengan field <code>_dummy: true</code>.
+        Jangan di-commit file ini ke git &mdash; hanya untuk testing lokal.
+    </div>
+
+    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <button id="addBtn" disabled>Menyiapkan Firebase...</button>
+        <button id="delBtn" class="danger" disabled>Hapus Semua Dummy</button>
+    </div>
+
+    <div id="status"></div>
+    <ul id="log"></ul>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, Timestamp, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDiC7hB-MBYx_LgEWD0HQ3mwxrkjiI2P8E",
+            authDomain: "undangan-7ba18.firebaseapp.com",
+            projectId: "undangan-7ba18",
+            storageBucket: "undangan-7ba18.firebasestorage.app",
+            messagingSenderId: "458590600416",
+            appId: "1:458590600416:web:a9f4faf2d8dc77f95ae485",
+            measurementId: "G-KEXFKHTG0D"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const dummies = [
+            { name: 'Ahmad Fauzi',       attendance: 'hadir',       guests: 2, message: 'Selamat menempuh hidup baru! Semoga sakinah mawaddah warahmah.' },
+            { name: 'Siti Nurhaliza',    attendance: 'hadir',       guests: 1, message: 'Barakallahu laka wa baraka alaika wa jama\'a bainakuma fi khair.' },
+            { name: 'Budi Santoso',      attendance: 'tidak_hadir', guests: 1, message: 'Maaf tidak bisa hadir, semoga acaranya lancar sampai selesai.' },
+            { name: 'Rina Kartika',      attendance: 'hadir',       guests: 4, message: 'Wah akhirnya nikah juga! Selamat ya, semoga langgeng sampai akhir hayat.' },
+            { name: 'Dedi Kurniawan',    attendance: 'ragu',        guests: 2, message: 'Insyaallah kalau tidak ada halangan saya usahakan datang.' },
+            { name: 'Maya Sari',         attendance: 'hadir',       guests: 3, message: 'Selamat pengantin baru, semoga menjadi keluarga yang samawa!' },
+            { name: 'Fajar Ramadhan',    attendance: 'hadir',       guests: 1, message: 'Congratulations! Bahagia selalu untuk kalian berdua.' },
+            { name: 'Lestari Wulandari', attendance: 'tidak_hadir', guests: 1, message: 'Maaf lagi di luar kota, semoga acaranya berkah ya.' },
+            { name: 'Andi Pratama',      attendance: 'hadir',       guests: 2, message: 'Barakallah! Doa terbaik untuk mempelai.' },
+            { name: 'Wati Handayani',    attendance: 'hadir',       guests: 2, message: 'Semoga jadi keluarga yang penuh cinta dan berkah.' },
+            { name: 'Rizky Aditya',      attendance: 'ragu',        guests: 1, message: 'Semoga bisa hadir, doakan lancar urusan saya.' },
+            { name: 'Nia Ramadhani',     attendance: 'hadir',       guests: 3, message: 'Alhamdulillah akhirnya, selamat ya! Sampai jumpa di hari H.' },
+            { name: 'Bagus Setiawan',    attendance: 'tidak_hadir', guests: 1, message: 'Selamat menikah, semoga jadi keluarga sakinah.' },
+            { name: 'Dewi Anggraeni',    attendance: 'hadir',       guests: 2, message: 'Turut berbahagia, semoga cepat dapat momongan!' },
+            { name: 'Yoga Pratama',      attendance: 'hadir',       guests: 1, message: 'Selamat menempuh hidup baru, jaga satu sama lain ya.' },
+        ];
+
+        const btn = document.getElementById('addBtn');
+        const delBtn = document.getElementById('delBtn');
+        const statusEl = document.getElementById('status');
+        const logEl = document.getElementById('log');
+
+        function setStatus(kind, msg) {
+            statusEl.className = kind;
+            statusEl.textContent = msg;
+        }
+        function log(msg, isErr = false) {
+            const li = document.createElement('li');
+            li.textContent = msg;
+            if (isErr) li.className = 'err';
+            logEl.appendChild(li);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        // Enable buttons once module is ready
+        btn.disabled = false;
+        btn.textContent = `Tambah ${dummies.length} Ucapan Dummy`;
+        delBtn.disabled = false;
+
+        btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            btn.textContent = 'Menambahkan...';
+            setStatus('info', `Mulai menambahkan ${dummies.length} dokumen...`);
+            logEl.innerHTML = '';
+
+            let ok = 0;
+            let fail = 0;
+            const now = Date.now();
+            const DAY_MS = 24 * 60 * 60 * 1000;
+
+            for (let i = 0; i < dummies.length; i++) {
+                const d = dummies[i];
+                // Spread createdAt across the last 7 days (newest first)
+                const offsetMs = Math.floor((i / dummies.length) * 7 * DAY_MS + Math.random() * DAY_MS * 0.5);
+                const createdAt = Timestamp.fromDate(new Date(now - offsetMs));
+
+                try {
+                    const ref = await addDoc(collection(db, 'wishes'), {
+                        name: d.name,
+                        attendance: d.attendance,
+                        guests: d.guests,
+                        message: d.message,
+                        createdAt: createdAt,
+                        _dummy: true,
+                    });
+                    ok++;
+                    log(`[OK] ${d.name} (${d.attendance}) -> ${ref.id}`);
+                } catch (err) {
+                    fail++;
+                    log(`[FAIL] ${d.name}: ${err.message}`, true);
+                }
+            }
+
+            if (fail === 0) {
+                setStatus('ok', `Selesai: ${ok} dokumen ditambahkan. Buka index.html untuk cek pagination.`);
+            } else {
+                setStatus('err', `Selesai dengan error: ${ok} berhasil, ${fail} gagal.`);
+            }
+            btn.textContent = `Tambah ${dummies.length} Ucapan Dummy Lagi`;
+            btn.disabled = false;
+        });
+
+        delBtn.addEventListener('click', async () => {
+            delBtn.disabled = true;
+            btn.disabled = true;
+            delBtn.textContent = 'Mencari...';
+            setStatus('info', 'Query dokumen dengan _dummy: true ...');
+            logEl.innerHTML = '';
+
+            try {
+                const q = query(collection(db, 'wishes'), where('_dummy', '==', true));
+                const snap = await getDocs(q);
+
+                if (snap.empty) {
+                    setStatus('info', 'Tidak ada dokumen dummy yang ditemukan.');
+                    delBtn.textContent = 'Hapus Semua Dummy';
+                    delBtn.disabled = false;
+                    btn.disabled = false;
+                    return;
+                }
+
+                if (!confirm(`Ditemukan ${snap.size} dokumen dummy. Hapus semua?`)) {
+                    setStatus('info', 'Dibatalkan.');
+                    delBtn.textContent = 'Hapus Semua Dummy';
+                    delBtn.disabled = false;
+                    btn.disabled = false;
+                    return;
+                }
+
+                delBtn.textContent = `Menghapus ${snap.size} dokumen...`;
+
+                // writeBatch handles up to 500 ops per batch — chunk just in case
+                const docs = snap.docs;
+                const CHUNK = 400;
+                let deleted = 0;
+
+                for (let i = 0; i < docs.length; i += CHUNK) {
+                    const batch = writeBatch(db);
+                    const chunk = docs.slice(i, i + CHUNK);
+                    chunk.forEach(d => batch.delete(d.ref));
+                    await batch.commit();
+                    chunk.forEach(d => log(`[DEL] ${d.data().name || '(no name)'} -> ${d.id}`));
+                    deleted += chunk.length;
+                }
+
+                setStatus('ok', `Selesai: ${deleted} dokumen dummy dihapus.`);
+            } catch (err) {
+                setStatus('err', `Gagal: ${err.message}`);
+                log(`[ERROR] ${err.message}`, true);
+            } finally {
+                delBtn.textContent = 'Hapus Semua Dummy';
+                delBtn.disabled = false;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
